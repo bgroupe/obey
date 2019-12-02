@@ -1,0 +1,62 @@
+version: '1'
+services:
+  abacus: 'abacus'
+  black_pearl: 'black-pearl'
+  boss: 'boss'
+  capone: 'channel-management'
+  conquistador: 'cash'
+  cowboy: 'pro'
+  glory: 'viator'
+  halyard: 'js'
+  hancock: 'waivers'
+  hawkeye: 'data'
+  kabuto: 'cms'
+  kano: 'content'
+  kraken: 'connect'
+  noreaga: 'noreaga'
+  pigeon: 'liveupdate'
+  pony: 'notify'
+  queen: 'book-api'
+  rosetta: 'pulse'
+  samurai: 'marketplace'
+  snoopy: 'snoopy'
+  sparrow: 'sparrow'
+  spinnaker: 'book'
+  stetson: 'pro-app'
+  tycoon: 'tycoon'
+environments:
+  - name: 'prod'
+    host: 'peek.com'
+    overrides:
+  - name: 'stage'
+    host: 'stage.peek.com'
+    overrides:
+      - glory
+  - name: 'cx'
+    host: 'cx.stage.peek.com'
+    overrides:
+      - glory
+      - snoopy
+      - hawkeye
+      - kabuto
+  - name: 'hoth'
+    host: 'hoth.stage.peek.com'
+    overrides:
+      - glory
+      - snoopy
+      - hawkeye
+      - kabuto
+  - name: 'kashyyyk'
+    host: 'kashyyyk.stage.peek.com'
+    overrides:
+      - glory
+      - snoopy
+      - hawkeye
+      - kabuto
+  - name: 'coruscant'
+    host: 'coruscant.stage.peek.com'
+    overrides:
+      - glory
+      - snoopy
+      - hawkeye
+      - kabuto
