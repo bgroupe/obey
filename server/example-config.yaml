@@ -1,0 +1,27 @@
+environments:
+  # outside kubernetes
+  - name: stage
+    discovery: false
+    selector: "hostname"
+    services:
+      - name: Abacus
+        value: abacus.stage.peek.com
+      - name: Cowboy
+        value: pro.stage.peek.com
+      - name: Noreaga
+        value: noreaga.stage.peek.com
+  # inside kubernetes, by label selector
+  - name: prod
+    discovery: false
+    selector: "hostname"
+    services:
+      - name: Pony
+        value: notify.peek.com
+      - name: Cowboy
+        value: pro.peek.com
+      - name: Noreaga
+        value: noreaga.peek.com
+  # inside kubernetes, autopopulate via service discovery
+  # dev:
+  #   discovery: true
+  #   selector: "peek.com/obey-discoverable"
