@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const versionFile = "version.json"
+
 
 func main() {
 	// load service configuration from yaml file into struct

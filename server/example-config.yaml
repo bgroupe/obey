@@ -15,12 +15,23 @@ environments:
     discovery: false
     selector: "hostname"
     services:
-      - name: Pony
-        value: notify.peek.com
+      # - name: Abacus
+      #   value: abacus.peek.com
+      - name: Black Pearl
+        value: black-pearl.peek.com
       - name: Cowboy
         value: pro.peek.com
+      - name: Hancock
+        value: waivers.peek.com
+      - name: Kabuto
+        value: cms.peek.com
+      - name: Kano
+        value: content.peek.com
+      - name: Pony
+        value: notify.peek.com
       - name: Noreaga
         value: noreaga.peek.com
+
   # inside kubernetes, autopopulate via service discovery
   # dev:
   #   discovery: true
