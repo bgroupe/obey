@@ -6,18 +6,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// type ServiceConfig struct {
-// 	Environments []struct {
-// 		EnvName string `yaml:"name"`
-// 		Discovery bool `yaml:"discovery"`
-// 		Selector string `yaml:"selector"`
-// 		Services []struct {
-// 			Name string `yaml:"name"`
-// 			Value string `yaml:"value"`
-// 		}
-// 	}
-// }
-
 type ServiceConfig struct {
 	Environments []ConfigEnv
 }

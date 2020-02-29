@@ -4,11 +4,11 @@ environments:
     discovery: false
     selector: "hostname"
     services:
-      - name: Abacus
+      - name: abacus
         value: abacus.stage.peek.com
-      - name: Cowboy
+      - name: cowboy
         value: pro.stage.peek.com
-      - name: Noreaga
+      - name: noreaga
         value: noreaga.stage.peek.com
   # inside kubernetes, by label selector
   - name: prod
@@ -17,19 +17,19 @@ environments:
     services:
       # - name: Abacus
       #   value: abacus.peek.com
-      - name: Black Pearl
+      - name: black-pearl
         value: black-pearl.peek.com
-      - name: Cowboy
+      - name: cowboy
         value: pro.peek.com
-      - name: Hancock
+      - name: hancock
         value: waivers.peek.com
-      - name: Kabuto
+      - name: kabuto
         value: cms.peek.com
-      - name: Kano
+      - name: kano
         value: content.peek.com
-      - name: Pony
+      - name: pony
         value: notify.peek.com
-      - name: Noreaga
+      - name: noreaga
         value: noreaga.peek.com
 
   # inside kubernetes, autopopulate via service discovery
