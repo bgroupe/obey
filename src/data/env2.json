@@ -1,0 +1,102 @@
+[
+    {
+        "name": "prod",
+        "services": [
+          {
+            "name": "cowboy",
+            "version": "8.1.41.78fdd"
+          },
+          {
+            "name": "tycoon",
+            "version": "7.2.31.8901ff"
+          },
+          {
+            "name": "noreaga",
+            "version": "5.6.31.67cf9"
+          },
+          {
+            "name": "pony",
+            "version": "5.6.31.67cf9"
+          },
+          {
+            "name": "stetson",
+            "version": "6.6.31.098e1"
+          }
+        ]
+
+    },
+
+    {
+        "name": "stage",
+        "services": [
+          {
+            "name": "cowboy",
+            "version": "5.5.31.67cf9"
+          },
+          {
+            "name": "tycoon",
+            "version": "5.6.19.dff54"
+          },
+          {
+            "name": "noreaga",
+            "version": "5.8.41.64c7d"
+          },
+          {
+            "name": "pony",
+            "version": "5.6.31.67cf9"
+          },
+          {
+            "name": "stetson",
+            "version": "6.9.11.17edf"
+          }
+        ]
+
+    },
+
+    {
+        "name": "hoth",
+        "services": [
+          {
+            "name": "cowboy",
+            "version": "release-latest"
+          },
+          {
+            "name": "tycoon",
+            "version": "5.6.41.356df"
+          },
+          {
+            "name": "noreaga",
+            "version": "5.7.121.67cf9"
+          },
+          {
+            "name": "pony",
+            "version": "feature-latest"
+          },
+          {
+            "name": "stetson",
+            "version": "6.8.18.ef8e7"
+          }
+        ]
+
+    },
+
+    {
+        "name": "qa",
+        "services": [
+          {
+            "name": "cowboy",
+            "version": "dev-latest"
+          },
+          {
+            "name": "tycoon",
+            "version": "5.6.41.356df"
+          },
+          {
+            "name": "stetson",
+            "version": "6.6.31.098e1"
+          }
+        ]
+
+    }
+
+]
