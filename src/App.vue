@@ -29,7 +29,7 @@
             <div class="container search-controls">
               <div class="buttons has-addons is-right">
                 <div
-                  class="button is-success is-light is-noto is-rounded"
+                  class="button is-primary is-light is-noto is-rounded"
                   @click="refreshData"
                 >
                   <span>Refresh</span>
@@ -50,7 +50,7 @@
               <div class="block"></div>
               <div class="block"></div>
             </div>
-            <div class="box">
+            <div class="box search-controls">
               <div class="block">
                 <b-field label="Services">
                   <b-taginput
@@ -114,24 +114,38 @@
           </section>
         </div>
       </b-tab-item>
-      <b-tab-item label="Diagnostics" icon="chart-line"></b-tab-item>
+      <b-tab-item label="Diagnostics" icon="chart-line">
+        <div class="section">
+          <div
+            class="container is-flex is-flex-wrap-wrap is-flex-direction-row is-justify-content-center"
+          >
+            <Worker
+              v-for="(worker, index) in registeredWorkers"
+              :key="index"
+              :worker="worker"
+              class="item"
+            />
+          </div>
+        </div>
+      </b-tab-item>
       <b-tab-item label="Release Management" icon="chart-gantt"></b-tab-item>
     </b-tabs>
   </div>
 </template>
 
 <script>
-const data = require("@/data/env.json");
-const data2 = require("@/data/env2.json");
-console.log(data2);
-
 import { mapState } from "vuex";
+import Worker from "./components/diagnostics/Worker.vue";
 
 export default {
+  components: {
+    Worker
+  },
+
   data() {
     return {
-      filteredTags: data,
-      filteredEnvs: data,
+      filteredTags: [],
+      filteredEnvs: [],
       isSelectOnly: false,
       tags: [],
       envs: [],
@@ -149,7 +163,41 @@ export default {
       isHoverable: true,
       isFocusable: true,
       isNarrowed: true,
-      activeTab: 0
+      activeTab: 0,
+      registeredWorkers: [
+        {
+          name: "prod",
+          ip: "158.84.106.155",
+          type: "k8s",
+          uptime: "89:29:17",
+          services: 14,
+          trend: [1, 12, 9, 13, 10, 8, 4]
+        },
+        {
+          name: "stage",
+          ip: "223.103.31.154",
+          type: "k8s",
+          uptime: "132:13:27",
+          services: 16,
+          trend: [0, 3, 5, 7, 9, 11, 2]
+        },
+        {
+          name: "qa",
+          ip: "112.142.176.156",
+          type: "peek-stack",
+          uptime: "12:83:00",
+          services: 10,
+          trend: [3, 2, 8, 2, 8, 1, 10]
+        },
+        {
+          name: "dev",
+          ip: "189.228.54.12",
+          type: "peek-stack",
+          uptime: "02:93:00",
+          services: 8,
+          trend: [1, 3, 2, 3, 4, 0, 4]
+        }
+      ]
     };
   },
   methods: {
@@ -168,7 +216,6 @@ export default {
       this.filteredTags = result;
       this.$store.commit("updateComputedTags", result);
       console.log("computed tags:", this.computedTags);
-      // TODO: save filtered envs
     },
 
     getFilteredEnvs(text) {
@@ -182,7 +229,6 @@ export default {
       this.filteredEnvs = result;
       this.$store.commit("updateComputedEnvs", result);
       console.log("computed envs:", this.computedEnvs);
-      // TODO: save filtered envs
     },
 
     buildCompareData2() {
@@ -228,7 +274,8 @@ export default {
     async refreshData() {
       // do a refreshy thing
 
-      let response = await this.$store.dispatch("callMockApi");
+      // let response = await this.$store.dispatch("callMockApi");
+      let response = await this.$store.dispatch("callMockApiAsync");
       this.$buefy.snackbar.open({
         duration: 2000,
         message: `Data refreshed- New Env: ${response.name}`,
@@ -250,6 +297,10 @@ export default {
     }
   },
   mounted() {},
+  async created() {
+    let response = await fetch("/api/environments");
+    console.log("async response:", response.json());
+  },
   computed: {
     ...mapState([
       "serviceData",
@@ -292,6 +343,17 @@ $radius-rounded: 290486px !default;
     padding: 20px;
   }
 
+  .container {
+    // display: grid;
+    // grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 1.5em;
+    // row-gap: 12px;
+  }
+
+  .card {
+    height: max-content;
+  }
+
   // .button {
   //   &.special-rounded {
   //     border-radius: 290486px;
@@ -311,6 +373,10 @@ $radius-rounded: 290486px !default;
     font-family: "Noto Mono";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  .search-controls {
+    // max-width: 300px;
   }
 }
 </style>

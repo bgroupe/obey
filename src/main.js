@@ -3,10 +3,19 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+import Trend from "vuetrend";
+
+import { makeServer } from "./data/mock-server";
+
 import Buefy from "buefy";
 import "buefy/dist/buefy.css";
 
-Vue.use(Buefy)
+if (process.env.NODE_ENV === "development") {
+  makeServer();
+}
+
+Vue.use(Buefy);
+Vue.use(Trend);
 
 Vue.config.productionTip = false;
 

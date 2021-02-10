@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import "crypto";
 import fakerStatic from "faker";
 
 Vue.use(Vuex);
@@ -38,6 +37,20 @@ export default new Vuex.Store({
         if (newEnv) {
           console.log(newEnv);
           commit("addMockServiceData", newEnv);
+          resolve(newEnv);
+        } else {
+          reject({ error: "failureGenerating mock object" });
+        }
+      });
+    },
+
+    async callMockApiAsync(context) {
+      let result = await (await fetch("/api/environments")).json();
+
+      return new Promise((resolve, reject) => {
+        let newEnv = result;
+        if (newEnv) {
+          context.commit("addMockServiceData", newEnv);
           resolve(newEnv);
         } else {
           reject({ error: "failureGenerating mock object" });
