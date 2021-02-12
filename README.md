@@ -1,6 +1,6 @@
 <img src="./ui/src/assets/obey-logo.svg" height="520px" width="520px"/>
 
-# Peek Discovery Service
+# Environment Discovery Service
 
 ### Goal
 ### General Overview
