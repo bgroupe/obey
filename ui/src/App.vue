@@ -1,9 +1,44 @@
 <template>
   <div id="app">
-    <b-navbar>
+    <nav class="navbar is-white">
+      <div class="navbar-brand">
+        <div class="navbar-item"><div class="block"></div></div>
+        <div class="block">
+          <img
+            src="./assets/obey-logo.svg"
+            alt="Peek Obey"
+            height="90px"
+            width="90px"
+          />
+        </div>
+        <div class="navbar-item">
+          <div class="tags has-addons"></div>
+        </div>
+        <div class="navbar-item"></div>
+      </div>
+      <div class="navbar-start">
+        <div class="navbar-item"></div>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="tags has-addons">
+            <span class="tag is-dark is-medium">System Status</span>
+            <a class="tag is-warning is-medium is-clickable">
+              <b-icon
+                :icon="statusIcon"
+                size="is-small"
+                :type="statusColor"
+              ></b-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- <div class="block"></div>     -->
+    <!-- <b-navbar>
       <template #brand>
         <b-navbar-item href="#">
-          <img src="./assets/obey.png" alt="Peek Obey" />
+          <img src="./assets/obey-logo.png" alt="Peek Obey" />
         </b-navbar-item>
         <b-navbar-item
           ><h1><strong>OBEY</strong></h1>
@@ -21,36 +56,65 @@
           </div>
         </b-navbar-item>
       </template>
-    </b-navbar>
+    </b-navbar> -->
     <b-tabs v-model="activeTab" position="is-centered">
       <b-tab-item label="Services" icon="chart-scatter-plot-hexbin">
         <div class="container">
           <section class="section">
-            <div class="container search-controls">
-              <div class="buttons has-addons is-right">
-                <div
-                  class="button is-primary is-light is-noto is-rounded"
-                  @click="refreshData"
-                >
-                  <span>Refresh</span>
-                  <b-icon
-                    icon="refresh"
-                    size="is-small"
-                    type="is-dark"
-                  ></b-icon>
-                </div>
-                <div
-                  class="button is-warning is-light is-noto is-rounded special-rounded"
-                  @click="clearTableData"
-                >
-                  <span>Clear Table</span>
-                  <b-icon icon="close" size="is-small" type="is-dark"></b-icon>
-                </div>
-              </div>
-              <div class="block"></div>
-              <div class="block"></div>
-            </div>
             <div class="box search-controls">
+              <div class="container search-controls">
+                <div class="buttons is-right">
+                  <b-tooltip
+                    position="is-top"
+                    type="is-primary is-light"
+                    delay="3"
+                    multilined
+                  >
+                    <div
+                      class="button is-warning is-light is-noto"
+                      @click="refreshData"
+                    >
+                      <b-icon
+                        icon="refresh"
+                        size="is-medium"
+                        type="is-dark"
+                      ></b-icon>
+                    </div>
+                    <template v-slot:content>
+                      <p><b>Refresh Service Data</b></p>
+                      <i
+                        >Fetches latest service data from workers if
+                        applicable.</i
+                      >
+                    </template>
+                  </b-tooltip>
+                  <b-tooltip
+                    position="is-top"
+                    type="is-primary is-light"
+                    delay="3"
+                    multilined
+                  >
+                    <div
+                      class="button is-danger is-light is-noto"
+                      @click="clearTableData"
+                    >
+                      <!-- <span>Clear Table</span> -->
+                      <b-icon
+                        icon="close"
+                        size="is-medium"
+                        type="is-dark"
+                      ></b-icon>
+                    </div>
+                    <template v-slot:content>
+                      <p><b>Clear Service Data</b></p>
+                      <i>Clear table data.</i>.
+                    </template>
+                  </b-tooltip>
+                </div>
+                <div class="block"></div>
+                <div class="block"></div>
+              </div>
+
               <div class="block">
                 <b-field label="Services">
                   <b-taginput
@@ -78,7 +142,7 @@
                     :open-on-focus="openOnFocus"
                     icon="chevron-right"
                     type="is-success is-dark"
-                    placeholder="Add Env"
+                    placeholder="Add Environments"
                     @typing="getFilteredEnvs"
                     @remove="clearTableData"
                   ></b-taginput>
@@ -139,7 +203,7 @@ import Worker from "./components/diagnostics/Worker.vue";
 
 export default {
   components: {
-    Worker
+    Worker,
   },
 
   data() {
@@ -164,6 +228,10 @@ export default {
       isFocusable: true,
       isNarrowed: true,
       activeTab: 0,
+      isAuthenticated: false,
+      authenticatedUser: "Authenticate",
+      statusIcon: "weather-partly-cloudy",
+      statusColor: "is-dark",
       registeredWorkers: [
         {
           name: "prod",
@@ -171,7 +239,7 @@ export default {
           type: "k8s",
           uptime: "89:29:17",
           services: 14,
-          trend: [1, 12, 9, 13, 10, 8, 4]
+          trend: [1, 12, 9, 13, 10, 8, 4],
         },
         {
           name: "stage",
@@ -179,7 +247,7 @@ export default {
           type: "k8s",
           uptime: "132:13:27",
           services: 16,
-          trend: [0, 3, 5, 7, 9, 11, 2]
+          trend: [0, 3, 5, 7, 9, 11, 2],
         },
         {
           name: "qa",
@@ -187,7 +255,7 @@ export default {
           type: "peek-stack",
           uptime: "12:83:00",
           services: 10,
-          trend: [3, 2, 8, 2, 8, 1, 10]
+          trend: [3, 2, 8, 2, 8, 1, 10],
         },
         {
           name: "dev",
@@ -195,23 +263,20 @@ export default {
           type: "peek-stack",
           uptime: "02:93:00",
           services: 8,
-          trend: [1, 3, 2, 3, 4, 0, 4]
-        }
-      ]
+          trend: [1, 3, 2, 3, 4, 0, 4],
+        },
+      ],
     };
   },
   methods: {
     getFilteredTags(text) {
       let allAtags = [
-        ...new Set(this.serviceData.map(x => x.services.map(s => s.name)))
+        ...new Set(this.serviceData.map((x) => x.services.map((s) => s.name))),
       ].flat();
       // need to dedupe again
       let result = [...new Set(allAtags)].filter(
-        option =>
-          option
-            .toString()
-            .toLowerCase()
-            .indexOf(text.toLowerCase()) >= 0
+        (option) =>
+          option.toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
       );
       this.filteredTags = result;
       this.$store.commit("updateComputedTags", result);
@@ -219,12 +284,9 @@ export default {
     },
 
     getFilteredEnvs(text) {
-      let result = [...new Set(this.serviceData.map(x => x.name))].filter(
-        option =>
-          option
-            .toString()
-            .toLowerCase()
-            .indexOf(text.toLowerCase()) >= 0
+      let result = [...new Set(this.serviceData.map((x) => x.name))].filter(
+        (option) =>
+          option.toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
       );
       this.filteredEnvs = result;
       this.$store.commit("updateComputedEnvs", result);
@@ -236,14 +298,14 @@ export default {
       this.tableData2 = [];
       this.tableIsEmpty = true;
       let fe = this.envs
-        .map(env => this.serviceData.filter(option => option.name == env))
+        .map((env) => this.serviceData.filter((option) => option.name == env))
         .flat();
       let composedTable = [];
-      this.tags.forEach(tag => composedTable.push({ service: tag }));
-      composedTable.map(row => {
-        fe.map(env => {
+      this.tags.forEach((tag) => composedTable.push({ service: tag }));
+      composedTable.map((row) => {
+        fe.map((env) => {
           let filteredServices = env.services.filter(
-            option => option.name == row.service
+            (option) => option.name == row.service
           );
 
           let version;
@@ -256,7 +318,7 @@ export default {
         });
       });
 
-      this.tableData2 = composedTable.map(row => Object.values(row));
+      this.tableData2 = composedTable.map((row) => Object.values(row));
       this.$store.commit("updateComputedTable", this.tableData2);
       console.log("computedTable", this.computedTable);
       this.tableIsEmpty = false;
@@ -282,19 +344,24 @@ export default {
         type: "is-warning",
         position: "is-bottom-left",
         actionText: "Dismiss",
-        queue: false
+        queue: false,
       });
     },
     // this is dumb don't use it
     filterArray(array, fields, value) {
-      array = array.filter(item => {
+      array = array.filter((item) => {
         const found = fields.every((field, index) => {
           return item[field] && item[field] == value[index];
         });
         return found;
       });
       return array;
-    }
+    },
+
+    authenticate() {
+      this.isAuthenticated = true;
+      this.authenticatedUser = "bgroupe";
+    },
   },
   mounted() {},
   async created() {
@@ -306,9 +373,9 @@ export default {
       "serviceData",
       "computedTable",
       "computedEnvs",
-      "computedTags"
-    ])
-  }
+      "computedTags",
+    ]),
+  },
 };
 </script>
 
@@ -324,7 +391,7 @@ $radius-rounded: 290486px !default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #42b983;
+  color: #4a4a4a;
 }
 
 #nav {
@@ -375,8 +442,23 @@ $radius-rounded: 290486px !default;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  .search-controls {
-    // max-width: 300px;
+  .logo {
+    width: 150px;
+    // margin-left: 20px;
+    // padding: 30px;
+  }
+
+  .has-left-vertical-divider {
+    border-left: 6px solid gray;
+    height: 36px;
+  }
+
+  .test-button {
+    border-radius: 75%;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background: #444;
   }
 }
 </style>
