@@ -1,29 +1,15 @@
-# obey
+<img src="./ui/src/assets/obey-logo.svg" height="520px" width="520px"/>
 
-## Project setup
-```
-npm install
-```
+# Environment Discovery Service
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Goal
+### General Overview
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Scheduler Overview
+### Worker Overview
 
-### Run your unit tests
-```
-npm run test:unit
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### TODO:
+---
+- Finish streaming output of a job
+- Change the insecure dialing for grpc
