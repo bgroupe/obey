@@ -13,13 +13,20 @@ type grpcServerConfig struct {
 	KeyFile string `toml:"key_file"`
 }
 
+type workerEnvConfig struct {
+	Name          string `toml:"name"`
+	Type          string `toml:"type"`
+	BroadcastAddr string `toml:"broadcast_addr"`
+}
+
 type schedulerConfig struct {
 	Addr string `toml:"addr"`
 }
 
 type tomlConfig struct {
-	GRPCServer grpcServerConfig `toml:"grpc_server"`
-	Scheduler  schedulerConfig  `toml:"scheduler"`
+	WorkerEnvConfig workerEnvConfig  `toml:"environment"`
+	GRPCServer      grpcServerConfig `toml:"grpc_server"`
+	Scheduler       schedulerConfig  `toml:"scheduler"`
 }
 
 var (

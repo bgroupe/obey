@@ -5,6 +5,8 @@ option java_package = "com.scheduler-worker-grpc.jobscheduler";
 option java_outer_classname = "JobSchedulerServerProto";
 option go_package = "jobscheduler";
 
+import "google/protobuf/timestamp.proto";
+
 package jobscheduler;
 
 // Scheduler server methods
@@ -15,6 +17,11 @@ service Scheduler {
 
 message RegisterReq {
   string address = 1;
+  string broadcastAddress = 2;
+  string envName = 3;
+  string envType = 4;
+  // google.protobuf.Timestamp launchTime = 5;
+
 }
 
 message RegisterRes {
