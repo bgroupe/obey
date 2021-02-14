@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 
+	pb "github.com/bgroupe/scheduler-worker-grpc/jobscheduler"
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 )
@@ -25,15 +27,20 @@ type worker struct {
 
 // Worker holds information about registered worker
 type Worker struct {
-	ID      string `redis:"id"`
-	Address string `redis:"address"`
+	ID            string `redis:"id" json:"id"`
+	Address       string `redis:"address" json:"address"`
+	BroadcastAddr string `redis:"broadcastAddress" json:"broadcast-addr,omitempty"`
+	EnvName       string `redis:"envName" json:"env"`
+	EnvType       string `redis:"envType" json:"env-type"`
+	ServerStatus  string `redis:"serverStatus" json:"server-status,omitempty"`
+	LaunchTime    string `redis:"launchTime" json:"launch-time,omitempty"`
 }
 
 // newWorker creates a new worker instance and adds
 // the new worker to the map.
 // Returns:
 // 		- string: worker id
-func newWorker(address string) (string, error) {
+func newWorker(r *pb.RegisterReq) (string, error) {
 	workersMutex.Lock()
 	defer workersMutex.Unlock()
 
@@ -48,13 +55,23 @@ func newWorker(address string) (string, error) {
 	// `worker:<uuid>`
 	workerKey := fmt.Sprintf("worker:%s", workerID)
 
+	// TODO: Add dynamic iteration of struct fields with `reflect` package
+	// https://stackoverflow.com/questions/18926303/iterate-through-the-fields-of-a-struct-in-go
 	reply, err := db.Conn.Do(
 		"HMSET",
 		workerKey,
 		"address",
-		address,
+		r.Address,
+		"broadcastAddress",
+		r.BroadcastAddress,
 		"id",
 		workerID,
+		"envName",
+		r.EnvName,
+		"envType",
+		r.EnvType,
+		"launchTime",
+		time.Now().UTC().String(),
 	)
 
 	if err != nil {

@@ -67,7 +67,7 @@
                   <b-tooltip
                     position="is-top"
                     type="is-primary is-light"
-                    delay="3"
+                    :delay="600"
                     multilined
                   >
                     <div
@@ -91,7 +91,7 @@
                   <b-tooltip
                     position="is-top"
                     type="is-primary is-light"
-                    delay="3"
+                    :delay="600"
                     multilined
                   >
                     <div
@@ -334,9 +334,6 @@ export default {
     },
 
     async refreshData() {
-      // do a refreshy thing
-
-      // let response = await this.$store.dispatch("callMockApi");
       let response = await this.$store.dispatch("callMockApiAsync");
       this.$buefy.snackbar.open({
         duration: 2000,
@@ -357,7 +354,7 @@ export default {
       });
       return array;
     },
-
+    // pseudo
     authenticate() {
       this.isAuthenticated = true;
       this.authenticatedUser = "bgroupe";
@@ -365,8 +362,13 @@ export default {
   },
   mounted() {},
   async created() {
-    let response = await fetch("/api/environments");
-    console.log("async response:", response.json());
+    // let response = await fetch("/api/environments");
+    // console.log("async response:", response.json());
+    let r = await this.$store.dispatch("callWorkerList");
+    console.log(r);
+    this.registeredWorkers = this.registeredWorkers.concat(this.workerList);
+
+    console.log(this.registeredWorkers);
   },
   computed: {
     ...mapState([
@@ -374,6 +376,7 @@ export default {
       "computedTable",
       "computedEnvs",
       "computedTags",
+      "workerList",
     ]),
   },
 };

@@ -8,4 +8,6 @@ key_file = "server.key"
 addr = "127.0.0.1:50000"
 
 [environment]
-name = "default"
+name              = "local"
+type              = "docker"
+broadcast_addr = "127.0.0.1:30031"

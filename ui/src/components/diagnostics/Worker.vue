@@ -82,20 +82,30 @@
       <div class="level">
         <div class="level-left">
           <div class="level-item">
-            <b-taglist attached>
-              <b-tag type="is-danger is-light ">
-                <b-icon
-                  type="is-warning"
-                  icon="clock-time-seven"
-                  size="is-small"
-                ></b-icon>
-              </b-tag>
-              <b-tag type="is-light  ">
-                <h2>
-                  <strong>{{ worker.uptime }}</strong>
-                </h2>
-              </b-tag>
-            </b-taglist>
+            <b-tooltip
+              position="is-top"
+              type="is-light is-light"
+              :delay="600"
+              size="is-small"
+            >
+              <b-taglist attached>
+                <b-tag type="is-danger is-light ">
+                  <b-icon
+                    type="is-warning"
+                    icon="clock-time-seven"
+                    size="is-small"
+                  ></b-icon>
+                </b-tag>
+                <b-tag type="is-light  ">
+                  <h2>
+                    <strong>{{ calculateUptime(worker.uptime) }}</strong>
+                  </h2>
+                </b-tag>
+              </b-taglist>
+              <template v-slot:content>
+                <p>Server Uptime</p>
+              </template>
+            </b-tooltip>
           </div>
         </div>
       </div>
@@ -117,11 +127,19 @@
   </div>
 </template>
 <script>
+import moment from "moment";
 export default {
   name: "Worker",
   props: {
-    worker: Object
-  }
+    worker: Object,
+  },
+
+  methods: {
+    calculateUptime(serverTs) {
+      // Server Timestamp should always be parsable UTC string
+      return moment().from(serverTs, true);
+    },
+  },
 };
 </script>
 <style lang="scss">
@@ -131,6 +149,9 @@ export default {
   padding: 50px;
   margin: 24px;
   cursor: pointer;
+  &.worker:hover {
+    background-color: #fffbeb;
+  }
 }
 
 .underline {

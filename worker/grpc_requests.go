@@ -25,7 +25,12 @@ func registerWorker() {
 	defer cancel()
 
 	registerReq := pb.RegisterReq{
-		Address: config.GRPCServer.Addr,
+		Address:          config.GRPCServer.Addr,
+		BroadcastAddress: config.WorkerEnvConfig.BroadcastAddr,
+		EnvName:          config.WorkerEnvConfig.Name,
+		EnvType:          config.WorkerEnvConfig.Type,
+		// https://pkg.go.dev/github.com/golang/protobuf/ptypes#Timestamp
+		// LaunchTime:       time.Unix(time.Now()),
 	}
 	r, err := c.RegisterWorker(ctx, &registerReq)
 	if err != nil {
