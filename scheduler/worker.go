@@ -55,6 +55,8 @@ func newWorker(r *pb.RegisterReq) (string, error) {
 	// `worker:<uuid>`
 	workerKey := fmt.Sprintf("worker:%s", workerID)
 
+	// TODO: Add dynamic iteration of struct fields with `reflect` package
+	// https://stackoverflow.com/questions/18926303/iterate-through-the-fields-of-a-struct-in-go
 	reply, err := db.Conn.Do(
 		"HMSET",
 		workerKey,
