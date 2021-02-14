@@ -10,7 +10,7 @@ import { makeServer } from "./data/mock-server";
 import Buefy from "buefy";
 import "buefy/dist/buefy.css";
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "fart") {
   makeServer();
 }
 

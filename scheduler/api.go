@@ -13,6 +13,7 @@ import (
 const (
 	contentTypeHeader     = "Content-Type"
 	applicationJSONHeader = "application/json"
+	corsHeader            = "Access-Control-Allow-Origin"
 )
 
 func apiStartJob(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -142,6 +143,7 @@ func apiQueryServiceVersionOnWorker(w http.ResponseWriter, r *http.Request, ps h
 
 func apiListWorkers(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	workers, err := listWorkers()
+	w.Header().Set(corsHeader, "*")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(apiError{Error: err.Error()})

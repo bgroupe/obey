@@ -9,5 +9,5 @@ addr = "127.0.0.1:50000"
 
 [environment]
 name              = "local"
-type              = "k8s"
+type              = "docker"
 broadcast_addr = "127.0.0.1:30031"
