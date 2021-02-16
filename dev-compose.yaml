@@ -2,6 +2,10 @@ version: "3"
 services:
   redis:
     image: redislabs/rejson:latest
+    labels:
+      - obey.com/scrape=true
+      - obey.com/version=latest
+      - obey.com/serviceName=redis
     restart: always
     ports:
       - 127.0.0.1:6379:6379
