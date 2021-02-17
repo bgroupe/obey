@@ -41,6 +41,7 @@ func (sc *scraper) Run() {
 		case <-sc.Done:
 			return
 		case tick := <-sc.Ticker.C:
+			fmt.Println("scraping services@:", tick)
 			scraped, err := sc.Client.Scrape()
 			if err != nil {
 				panic(err)
