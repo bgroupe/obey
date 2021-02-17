@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/Microsoft/go-winio v0.4.16 // indirect
-	github.com/bgroupe/scheduler-worker-grpc v0.0.0-20190901041407-a56b1cbe6458
+	github.com/bgroupe/obey v0.0.0-20190901041407-a56b1cbe6458
 	github.com/containerd/containerd v1.4.3 // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v20.10.3+incompatible

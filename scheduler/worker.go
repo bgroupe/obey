@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/bgroupe/scheduler-worker-grpc/jobscheduler"
+	pb "github.com/bgroupe/obey/jobscheduler"
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 )

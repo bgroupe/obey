@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/bgroupe/scheduler-worker-grpc/jobscheduler"
+	pb "github.com/bgroupe/obey/jobscheduler"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )

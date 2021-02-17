@@ -23,10 +23,24 @@ type schedulerConfig struct {
 	Addr string `toml:"addr"`
 }
 
+type scrapeConfig struct {
+	Interval                    string       `toml:"scrape_interval"`
+	AttemptServiceConsolidation bool         `toml:"attempt_service_consolidation"`
+	Whitelisting                bool         `toml:"whitelisting"`
+	ScrapeLabels                scrapeLabels `toml:"scrape_config.labels"`
+}
+
+type scrapeLabels struct {
+	whitelist string `toml:"whitelist"`
+	version   string `toml:"version"`
+	name      string `toml:"name"`
+}
+
 type tomlConfig struct {
 	WorkerEnvConfig workerEnvConfig  `toml:"environment"`
 	GRPCServer      grpcServerConfig `toml:"grpc_server"`
 	Scheduler       schedulerConfig  `toml:"scheduler"`
+	ScrapeConfig    scrapeConfig     `toml:"scrape_config"`
 }
 
 var (

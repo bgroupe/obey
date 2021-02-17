@@ -6,9 +6,7 @@ import (
 
 // Client - Main interface for worker
 type Client interface {
-	Scrape()
-	Stat()
-	Logs()
+	Scrape() ([]ScrapedContainer, error)
 }
 
 // DockerClientConfig - config object for Docker client

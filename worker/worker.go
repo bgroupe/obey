@@ -20,9 +20,14 @@ func init() {
 
 // Entry point of the worker application.
 func main() {
+	scraper, err := newScraper()
+	if err != nil {
+		fatal(fmt.Sprintf("Error starting scraper: (%e)\n", err))
+	}
 
 	go startGRPCServer()
 	go registerWorker()
+	go scraper.Run()
 
 	sig := make(chan os.Signal)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)

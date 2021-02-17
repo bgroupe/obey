@@ -15,31 +15,6 @@ const (
 	serviceLabel = "obey.com/serviceName"
 )
 
-// func main() {
-// 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	dc := DockerClient{
-// 		Client: cli,
-// 		Config: DockerClientConfig{
-// 			scrapeAll:                false,
-// 			deriveMetadataFromLabels: true,
-// 		},
-// 	}
-
-// 	scraped, err := dc.Scrape()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	for _, sc := range scraped {
-// 		fmt.Println("scraped:", sc.Name, sc.Version, sc.ImageSha, sc.State, sc.Created, sc.Status)
-// 	}
-// }
-
 // Scrape scrapes all containers based on configured labels
 func (d *DockerClient) Scrape() ([]ScrapedContainer, error) {
 	ctx := context.Background()
