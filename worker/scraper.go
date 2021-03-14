@@ -46,11 +46,12 @@ func (sc *scraper) Run() {
 			if err != nil {
 				panic(err)
 			}
-			for _, container := range scraped {
-				fmt.Println(container.Name)
-			}
+			// for _, container := range scraped {
+			// 	fmt.Println(container.Name)
+			// }
 			// Serialize Scraped Stuff
 			// Send to Scheduler via GRPC
+			reportServiceData(scraped)
 		}
 	}
 }

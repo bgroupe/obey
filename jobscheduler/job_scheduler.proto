@@ -13,6 +13,7 @@ package jobscheduler;
 service Scheduler {
   rpc RegisterWorker(RegisterReq) returns (RegisterRes) {}
   rpc DeregisterWorker(DeregisterReq) returns (DeregisterRes) {}
+  rpc ReportServiceData(ReportServiceDataRequest) returns (ReportServiceDataResponse) {}
 }
 
 message RegisterReq {
@@ -35,6 +36,24 @@ message DeregisterReq {
 
 message DeregisterRes {
   bool success = 1;
+}
+
+message ReportServiceDataRequest {
+  string name = 1;
+  repeated ServiceData serviceData = 2;
+}
+
+message ReportServiceDataResponse {
+  bool success = 1;
+}
+
+message ServiceData {
+  string name = 1;
+  string version = 2;
+  string state = 3;
+  string status = 4;
+  string created = 5;
+  string revision = 6;
 }
 
 // Worker server methods

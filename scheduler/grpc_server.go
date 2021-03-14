@@ -51,6 +51,26 @@ func (s *server) DeregisterWorker(ctx context.Context, r *pb.DeregisterReq) (*pb
 	return &res, nil
 }
 
+// ReportServiceData collects a report of service data and registers it in Redis
+func (s *server) ReportServiceData(ctx context.Context, r *pb.ReportServiceDataRequest) (*pb.ReportServiceDataResponse, error) {
+
+	err := acceptReportServiceData(r)
+	if err != nil {
+		res := pb.ReportServiceDataResponse{
+			Success: false,
+		}
+		return &res, err
+	}
+
+	res := pb.ReportServiceDataResponse{
+		Success: true,
+	}
+
+	log.Printf("Service Report Generated for env: %s\n", r.Name)
+	return &res, nil
+
+}
+
 // startGRPCServer starts a scheduler server instance on the address specified
 // by the config.GRPCServer.Addr, if the config.GRPCServer.UseTLS is true, the
 // GRPC server will start with TLS with the key and crt file speficied in config.

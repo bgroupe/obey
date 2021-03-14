@@ -6,12 +6,16 @@ import (
 
 // Client - Main interface for worker
 type Client interface {
+	Poll()
+	Discover() ([]ScrapedContainer, error)
 	Scrape() ([]ScrapedContainer, error)
 }
 
 // DockerClientConfig - config object for Docker client
 type DockerClientConfig struct {
+	scrape                   bool
 	scrapeAll                bool
+	poll                     bool
 	deriveMetadataFromLabels bool
 }
 
@@ -22,6 +26,7 @@ type DockerClient struct {
 }
 
 // ScrapedContainer used for serializing container data back to the worker
+//  TODO: use the proto struct instead
 type ScrapedContainer struct {
 	Name     string
 	Version  string

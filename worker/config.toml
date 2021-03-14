@@ -15,7 +15,7 @@ broadcast_addr    = "127.0.0.1:30031"
 [scrape_config]
 whitelisting = true
 attempt_service_consolidation = true
-scrape_interval = "1m"
+scrape_interval = "30s"
 
   [scrape_config.labels]
   whitelist = "obey.com/scrape"
