@@ -53,7 +53,10 @@ func (d *DockerClient) Scrape() ([]ScrapedContainer, error) {
 func (d *DockerClient) ScrapeWithLabel(label string) (ScrapedContainer, error) {
 	ctx := context.Background()
 	var sc ScrapedContainer
-	containers, err := d.Client.ContainerList(ctx, types.ContainerListOptions{})
+	containers, err := d.Client.ContainerList(ctx, types.ContainerListOptions{
+		All:    true,
+		Latest: true,
+	})
 
 	if err != nil {
 		return sc, err
@@ -61,8 +64,7 @@ func (d *DockerClient) ScrapeWithLabel(label string) (ScrapedContainer, error) {
 
 	for _, container := range containers {
 		labels := container.Labels
-		if val, _ := labels[label]; val == "true" {
-
+		if val, _ := labels[serviceLabel]; val == label {
 			shortSha := strings.Split(container.ImageID, "sha256:")[1]
 			sc.Name = d.deriveServiceName(container)
 			sc.Version = d.deriveServiceVersion(container)
@@ -76,7 +78,7 @@ func (d *DockerClient) ScrapeWithLabel(label string) (ScrapedContainer, error) {
 }
 
 // Poll wraps polling functionality
-func (d *DockerClient) Poll() {
+func (d *DockerClient) Poll(labels chan string) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -88,10 +90,12 @@ func (d *DockerClient) Poll() {
 	for {
 		select {
 		case <-errChan:
-			// change this
+			// TODO: reconnect logic
 			panic(<-errChan)
 		case event := <-eventChan:
+
 			if event.Type == "container" && event.Action == "create" {
+				svcName := event.Actor.Attributes[serviceLabel]
 				log.WithFields(log.Fields{
 					"process": "listener",
 					"status":  event.Status,
@@ -100,12 +104,66 @@ func (d *DockerClient) Poll() {
 					"service": event.Actor.Attributes["obey.com/serviceName"],
 					"version": event.Actor.Attributes["obey.com/version"],
 					// "attributes": event.Actor.Attributes,
-				}).Info("New Service Updated: ")
-				//    sc, err := d.ScrapeWithLabel(event.Actor.Attributes["obey.com/serviceName"])
-				// need to batch here
+				}).Info("New Service Update Detected: ")
+				d.PushToChannel(labels, svcName)
 			}
+
 		}
 	}
+}
+
+//
+// PushToChannel is dumb and should not have to be a thing
+func (d *DockerClient) PushToChannel(labels chan string, s string) {
+	go func() {
+		labels <- s
+	}()
+}
+
+// Batch batches evens to container lookup methods
+func (d *DockerClient) Batch(labels chan string, maxItems int, maxTimeout time.Duration) chan []ScrapedContainer {
+	batches := make(chan []ScrapedContainer)
+
+	go func() {
+		defer close(batches)
+
+		for keepGoing := true; keepGoing; {
+			var batch []ScrapedContainer
+			expire := time.After(maxTimeout)
+			for {
+				select {
+				case label, ok := <-labels:
+					if !ok {
+
+						keepGoing = false
+						goto done
+					}
+					sc, err := d.ScrapeWithLabel(label)
+					if err != nil {
+						log.Errorf("error scraping container by label: %v", label)
+						log.Error(err)
+						goto done
+					}
+					batch = append(batch, sc)
+
+					if len(batch) == maxItems {
+						goto done
+					}
+
+				case <-expire:
+					goto done
+				}
+			}
+
+		done:
+			if len(batch) > 0 {
+				batches <- batch
+			}
+		}
+	}()
+
+	return batches
+
 }
 
 // Discover performs the initial load of services in an environment
@@ -147,6 +205,11 @@ func (d *DockerClient) deriveServiceName(container types.Container) string {
 	return container.Names[0]
 }
 
+// TODO:
+// func (d *DockerClient) deriveMetadataFromVersionJson(container types.Container) ScrapedContainer {
+// 	// pseudo
+// 	// req, err := sling.New()
+// }
 func contains(s []string, str string) bool {
 	for _, v := range s {
 		if v == str {

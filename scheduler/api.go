@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -186,7 +187,7 @@ func api() {
 		Handler: createRouter(),
 	}
 
-	log.Println("HTTP Server listening on", config.HTTPServer.Addr)
+	log.Info("HTTP Server listening on", config.HTTPServer.Addr)
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}

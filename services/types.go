@@ -1,12 +1,15 @@
 package services
 
 import (
+	"time"
+
 	"github.com/docker/docker/client"
 )
 
 // Client - Main interface for worker
 type Client interface {
-	Poll()
+	Poll(labels chan string)
+	Batch(labels chan string, maxItems int, maxTimeout time.Duration) chan []ScrapedContainer
 	Discover() ([]ScrapedContainer, error)
 	Scrape() ([]ScrapedContainer, error)
 }

@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"log"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	pb "github.com/bgroupe/obey/jobscheduler"
 	"github.com/bgroupe/obey/services"
@@ -39,7 +40,7 @@ func registerWorker() {
 	}
 
 	workerID = r.WorkerID
-	log.Printf("Registered ID: %s", r.WorkerID)
+	log.Infof("Registered ID: %s", r.WorkerID)
 }
 
 // deregisterWorker deregisters the calling worker from the scheduler.
@@ -65,7 +66,7 @@ func deregisterWorker() {
 		log.Fatalf("could not deregister: %v", err)
 	}
 
-	log.Printf("Deregistered OK: %t", r.Success)
+	log.Infof("Deregistered OK: %t", r.Success)
 }
 
 // reportServiceData sends reports to the scheduler in
@@ -106,5 +107,5 @@ func reportServiceData(sc []services.ScrapedContainer) {
 		log.Fatalf("could not report service data: %v", err)
 	}
 
-	log.Printf("Scrape Report OK: %t", r.Success)
+	log.Infof("Scrape Report OK: %t", r.Success)
 }

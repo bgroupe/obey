@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/bgroupe/obey/services"
 	log "github.com/sirupsen/logrus"
 )
@@ -49,6 +51,15 @@ func (l *listener) Listen() {
 		"process": "Listener",
 		"info":    "startup",
 	}).Info("initiating listener...")
+	createdContainerLabels := make(chan string)
 
-	l.Client.Poll()
+	go l.Client.Poll(createdContainerLabels)
+	// TODO:
+	// Config Point: load batch interval from config
+	batches := l.Client.Batch(createdContainerLabels, 10, 10*time.Millisecond)
+	for batch := range batches {
+		log.Infof("reporting batch: %v", batch)
+		// reportServiceData(batch)
+	}
+
 }

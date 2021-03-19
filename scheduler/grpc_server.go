@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"log"
 	"net"
+
+	log "github.com/sirupsen/logrus"
 
 	pb "github.com/bgroupe/obey/jobscheduler"
 	"google.golang.org/grpc"
@@ -66,7 +67,7 @@ func (s *server) ReportServiceData(ctx context.Context, r *pb.ReportServiceDataR
 		Success: true,
 	}
 
-	log.Printf("Service Report Generated for env: %s\n", r.Name)
+	log.Infof("Service Report Generated for env: %s\n", r.Name)
 	return &res, nil
 
 }
@@ -93,7 +94,7 @@ func startGRPCServer() {
 		opts = []grpc.ServerOption{grpc.Creds(creds)}
 	}
 
-	log.Println("GRPC Server listening on", config.GRPCServer.Addr)
+	log.Info("GRPC Server listening on", config.GRPCServer.Addr)
 
 	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterSchedulerServer(grpcServer, &server{})
