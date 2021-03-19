@@ -1,6 +1,6 @@
 [grpc_server]
-addr = "127.0.0.1:30000"
-use_tls = false
+addr     = "127.0.0.1:30000"
+use_tls  = false
 crt_file = "server.pem"
 key_file = "server.key"
 
@@ -10,4 +10,14 @@ addr = "127.0.0.1:50000"
 [environment]
 name              = "local"
 type              = "docker"
-broadcast_addr = "127.0.0.1:30031"
+broadcast_addr    = "127.0.0.1:30031"
+
+[scrape_config]
+whitelisting = true
+attempt_service_consolidation = true
+scrape_interval = "30s"
+
+  [scrape_config.labels]
+  whitelist = "obey.com/scrape"
+  version   = "obey.com/version"
+  name      = "obey.com/serviceName"

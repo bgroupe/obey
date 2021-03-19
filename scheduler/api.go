@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -153,6 +154,19 @@ func apiListWorkers(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	json.NewEncoder(w).Encode(workers)
 }
 
+func apiListEnv(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	envs, err := listEnvs()
+	w.Header().Set(corsHeader, "*")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(apiError{Error: err.Error()})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(envs)
+}
+
 func createRouter() *httprouter.Router {
 	router := httprouter.New()
 
@@ -160,7 +174,8 @@ func createRouter() *httprouter.Router {
 	router.POST("/stop", apiStopJob)
 	router.POST("/query", apiQueryJob)
 
-	router.GET("/list", apiListWorkers)
+	router.GET("/workers/list", apiListWorkers)
+	router.GET("/env/list", apiListEnv)
 	router.GET("/version/:service/:worker", apiQueryServiceVersionOnWorker)
 
 	return router
@@ -172,7 +187,7 @@ func api() {
 		Handler: createRouter(),
 	}
 
-	log.Println("HTTP Server listening on", config.HTTPServer.Addr)
+	log.Info("HTTP Server listening on", config.HTTPServer.Addr)
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}

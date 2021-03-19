@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
-	"log"
 	"time"
 
-	pb "github.com/bgroupe/scheduler-worker-grpc/jobscheduler"
+	log "github.com/sirupsen/logrus"
+
+	pb "github.com/bgroupe/obey/jobscheduler"
+	"github.com/bgroupe/obey/services"
 	"google.golang.org/grpc"
 )
 
@@ -38,7 +40,7 @@ func registerWorker() {
 	}
 
 	workerID = r.WorkerID
-	log.Printf("Registered ID: %s", r.WorkerID)
+	log.Infof("Registered ID: %s", r.WorkerID)
 }
 
 // deregisterWorker deregisters the calling worker from the scheduler.
@@ -64,5 +66,46 @@ func deregisterWorker() {
 		log.Fatalf("could not deregister: %v", err)
 	}
 
-	log.Printf("Deregistered OK: %t", r.Success)
+	log.Infof("Deregistered OK: %t", r.Success)
+}
+
+// reportServiceData sends reports to the scheduler in
+func reportServiceData(sc []services.ScrapedContainer) {
+	conn, err := grpc.Dial(config.Scheduler.Addr, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewSchedulerClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	// Need to append pointers here
+	var serviceData []*pb.ServiceData
+
+	for _, container := range sc {
+		sd := pb.ServiceData{
+			Name:     container.Name,
+			Version:  container.Version,
+			State:    container.State,
+			Status:   container.Status,
+			Created:  container.Created,
+			Revision: container.ImageSha,
+		}
+
+		serviceData = append(serviceData, &sd)
+	}
+
+	reportReq := pb.ReportServiceDataRequest{
+		Name:        config.WorkerEnvConfig.Name,
+		ServiceData: serviceData,
+	}
+
+	r, err := c.ReportServiceData(ctx, &reportReq)
+
+	if err != nil {
+		log.Fatalf("could not report service data: %v", err)
+	}
+
+	log.Infof("Scrape Report OK: %t", r.Success)
 }

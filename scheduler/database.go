@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gomodule/redigo/redis"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // DB holds redis conn
@@ -13,10 +13,10 @@ type DB struct {
 
 // ConnectDB constructor function for Redis db
 func ConnectDB(url string) (db DB, err error) {
-	fmt.Println(url)
+	log.Info("connected to redis")
 	conn, err := redis.DialURL(url)
 	if err != nil {
-		fmt.Println("error connecting to db")
+		log.Error("error connecting to db")
 	}
 
 	db = DB{

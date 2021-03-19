@@ -13,3 +13,24 @@
 ---
 - Finish streaming output of a job
 - Change the insecure dialing for grpc
+
+[x] Delete worker from Redis store
+
+[] Database functions
+
+[x] Serialize store to marshaled json
+
+[] Create shared models
+
+[x] Surface errors for deregistering workers
+
+[] Use redis.Pool
+
+[] remove workers.Mutex()
+
+[] potentially look into redlock https://github.com/go-redsync/redsync
+
+[] change marshaling function to account for service poll
+[] move module functions out of worker/server
+    [] separate grpc requests
+    [] separate config

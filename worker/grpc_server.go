@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
 
-	pb "github.com/bgroupe/scheduler-worker-grpc/jobscheduler"
+	log "github.com/sirupsen/logrus"
+
+	pb "github.com/bgroupe/obey/jobscheduler"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -90,7 +91,7 @@ func startGRPCServer() {
 		opts = []grpc.ServerOption{grpc.Creds(creds)}
 	}
 
-	log.Println("GRPC Server listening on", config.GRPCServer.Addr)
+	log.Info("GRPC Server listening on", config.GRPCServer.Addr)
 
 	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterWorkerServer(grpcServer, &server{})

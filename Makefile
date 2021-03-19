@@ -37,7 +37,13 @@ build_worker:
 run_worker:
 	$(WORKER_PATH)/$(WORKER_BINARY)
 
-clean: 
+run:
+	tmux new -s obey-debug
+	tmux set-option remain-on-exit on
+	tmux split-window "$(SCHEDULER_PATH)/$(SCHEDULER_BINARY)"
+	tmux split-window "$(WORKER_PATH)/$(WORKER_BINARY)"
+
+clean:
 	rm -f *.out
 	rm -f $(SCHEDULER_PATH)/$(SCHEDULER_BINARY)
 	rm -f $(WORKER_PATH)/$(WORKER_BINARY)
